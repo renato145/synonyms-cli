@@ -1,0 +1,17 @@
+[package]
+name = "synonyms-cli"
+description = "TODO"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "synonyms"
+path = "src/main.rs"
+
+[dependencies]
+reqwest = "0.11"
+clap = { version = "3.1", features = ["derive"] }
+config = { version = "0.13", default-features = false, features = ["yaml"] }
+dialoguer = "0.10"
+anyhow = "1"
