@@ -9,14 +9,15 @@ pub struct Settings {
     pub api_key: String,
 }
 
-pub fn get_settings() -> Result<Settings> {
+pub fn get_settings(try_create: bool) -> Result<Settings> {
     let config_file = ProjectDirs::from("", "", "synonyms")
-        .ok_or(anyhow!("Couldn't retrieve configuration path"))?
+        .ok_or_else(|| anyhow!("Couldn't retrieve configuration path"))?
         .config_dir()
         .to_path_buf()
         .join("config.yaml");
 
     if !config_file.exists()
+        && try_create
         && Confirm::new()
             .show_default(true)
             .with_prompt(format!(
