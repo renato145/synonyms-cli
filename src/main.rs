@@ -23,7 +23,7 @@ const LANGUAGES: &str = "en, fr, cs, es, el, da, de, hu, it, no, pl, pt, ro, ru,
 const LANGUAGES_: &str ="en_US, fr_FR, cs_CZ, es_ES, el_GR, da_DK, de_DE, hu_HU, it_IT, no_NO, pl_PL, pt_PT, ro_RO, ru_RU, sk_SK";
 static LANGUAGE_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
     let mut m = HashMap::new();
-    for (a, b) in LANGUAGES.split(',').zip(LANGUAGES_.split(',')) {
+    for (a, b) in LANGUAGES.split(", ").zip(LANGUAGES_.split(", ")) {
         m.insert(a.to_string(), b.to_string());
     }
     m
