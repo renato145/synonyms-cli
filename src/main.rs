@@ -2,16 +2,19 @@ mod configuration;
 mod domain;
 mod request_handling;
 
-use crate::{configuration::get_settings, domain::Synonyms, request_handling::get_web_synonyms};
+use crate::configuration::get_settings;
+use ansi_term::{Color, Style};
 use anyhow::Result;
 use clap::Parser;
+use dialoguer::Input;
+use domain::{get_synonyms, show_synonyms};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
 
 #[derive(Parser, Debug)]
 #[clap(about, version)]
 struct Opts {
-    word: String,
+    word: Option<String>,
     #[clap(short, long, default_value_t=String::from("en"))]
     language: String,
 }
@@ -34,10 +37,41 @@ async fn main() -> Result<()> {
         .unwrap_or_else(|| panic!("Invalid language, select one of: {}", LANGUAGES));
     let settings = get_settings(true)?;
 
-    let response = get_web_synonyms(&word, language, &settings.api_key).await?;
-    let synonyms = Synonyms::from(response);
+    if let Some(word) = word {
+        let synonyms = get_synonyms(&word, language, &settings.api_key).await?;
+        show_synonyms(synonyms);
+    } else {
+        start_interactive(language, &settings.api_key).await?;
+    }
 
-    println!("{:#?}", synonyms);
+    Ok(())
+}
+
+async fn start_interactive(language: &str, api_key: &str) -> Result<()> {
+    let prompt = format!(
+        "{}",
+        Style::new().bold().paint("Enter a word (use 'q' to quit)")
+    );
+    loop {
+        let word: String = Input::new()
+            .with_prompt(&prompt)
+            .report(true)
+            .interact_text()?;
+        if word == "q" {
+            break;
+        }
+        match get_synonyms(&word, language, api_key).await {
+            Ok(synonyms) => {
+                show_synonyms(synonyms);
+            }
+            Err(e) => {
+                eprintln!(
+                    "{}",
+                    Style::new().fg(Color::Red).paint(format!("Error: {}", e))
+                );
+            }
+        }
+    }
     Ok(())
 }
 
