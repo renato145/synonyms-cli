@@ -9,7 +9,7 @@ use clap::Parser;
 use dialoguer::Input;
 use domain::{get_synonyms, show_synonyms};
 use once_cell::sync::Lazy;
-use std::{collections::HashMap, process};
+use std::{collections::HashMap, process, time::Duration};
 
 #[derive(Parser, Debug)]
 #[clap(about, version)]
@@ -72,6 +72,8 @@ async fn start_interactive(language: &str, api_key: &str) -> Result<()> {
                 );
             }
         }
+        tokio::time::sleep(Duration::from_millis(250)).await;
+        println!("\n");
     }
     Ok(())
 }
