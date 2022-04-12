@@ -25,6 +25,7 @@ itertools = "0.10"
 prettytable-rs = "0.8"
 termion = "1.5"
 ansi_term = "0.12"
+spinners = "3"
 
 [dev-dependencies]
 claim = "0.5"

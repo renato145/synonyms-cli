@@ -4,6 +4,7 @@ use prettytable::{
     format::{FormatBuilder, LinePosition, LineSeparator},
     Cell, Row, Table,
 };
+use spinners::{Spinner, Spinners};
 
 #[derive(Debug)]
 pub struct Synonyms {
@@ -24,8 +25,10 @@ pub async fn get_synonyms(
     language: &str,
     api_key: &str,
 ) -> anyhow::Result<Vec<Synonyms>> {
-    let res = get_web_synonyms(word, language, api_key).await?;
-    Ok(res.response.into_iter().map(Synonyms::from).collect())
+    let spinner = Spinner::new(Spinners::CircleHalves, "Getting synonyms...".to_string());
+    let res = get_web_synonyms(word, language, api_key).await;
+    spinner.stop_with_message(termion::clear::CurrentLine.to_string());
+    Ok(res?.response.into_iter().map(Synonyms::from).collect())
 }
 
 const MAX_COLS: usize = 12;
