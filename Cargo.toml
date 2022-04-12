@@ -1,6 +1,6 @@
 [package]
 name = "synonyms-cli"
-description = "TODO"
+description = "Get synonyms using the https://thesaurus.altervista.org API"
 version = "0.1.0"
 edition = "2021"
 
