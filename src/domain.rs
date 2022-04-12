@@ -27,7 +27,7 @@ pub async fn get_synonyms(
 ) -> anyhow::Result<Vec<Synonyms>> {
     let spinner = Spinner::new(Spinners::CircleHalves, "Getting synonyms...".to_string());
     let res = get_web_synonyms(word, language, api_key).await;
-    spinner.stop_with_message(termion::clear::CurrentLine.to_string());
+    spinner.stop_with_newline();
     Ok(res?.response.into_iter().map(Synonyms::from).collect())
 }
 

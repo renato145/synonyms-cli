@@ -32,12 +32,10 @@ static LANGUAGE_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
 #[tokio::main]
 async fn main() -> Result<()> {
     let Opts { word, language } = Opts::parse();
-    let language = LANGUAGE_MAP
-        .get(&language)
-        .unwrap_or_else(|| {
-            eprintln!("Invalid language, select one of: {}", LANGUAGES);
-            process::exit(1);
-        });
+    let language = LANGUAGE_MAP.get(&language).unwrap_or_else(|| {
+        eprintln!("Invalid language, select one of: {}", LANGUAGES);
+        process::exit(1);
+    });
     let settings = get_settings(true)?;
 
     if let Some(word) = word {
