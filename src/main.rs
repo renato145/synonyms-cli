@@ -9,7 +9,7 @@ use clap::Parser;
 use dialoguer::Input;
 use domain::{get_synonyms, show_synonyms};
 use once_cell::sync::Lazy;
-use std::collections::HashMap;
+use std::{collections::HashMap, process};
 
 #[derive(Parser, Debug)]
 #[clap(about, version)]
@@ -34,7 +34,10 @@ async fn main() -> Result<()> {
     let Opts { word, language } = Opts::parse();
     let language = LANGUAGE_MAP
         .get(&language)
-        .unwrap_or_else(|| panic!("Invalid language, select one of: {}", LANGUAGES));
+        .unwrap_or_else(|| {
+            eprintln!("Invalid language, select one of: {}", LANGUAGES);
+            process::exit(1);
+        });
     let settings = get_settings(true)?;
 
     if let Some(word) = word {
